@@ -1,0 +1,25 @@
+body {
+	text-align: center;
+	font-family: Arial, sans-serif;
+}
+
+h1 {
+	margin-top: 30px;
+	font-size: 3.2em;
+}
+
+.container {
+	margin-top: 20px;
+	display: grid;
+	grid-template-rows: repeat(3, auto);
+	grid-template-columns: repeat(3, auto);
+	justify-content: center;
+	align-content: center;
+}
+
+.container div {
+	width: 100px;
+	height: 100px;
+	font-size: 5em;
+	border: solid black 1px;
+}
