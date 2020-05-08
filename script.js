@@ -22,8 +22,27 @@ const gameBoard = (() => {
 
 		return arr;
 	})();
+	const declare = (() => {
+		const h2 = document.querySelector("h2");
+		const declareP1 = "Player 1's Turn!";
+		const declareP2 = "Player 2's Turn!";
 
-	return { placedX, gamePlay, winningPlays, gameSpots };
+		const player = () => {
+			if (h2.innerHTML == declareP1) {
+				h2.innerHTML = declareP2;
+			} else {
+				h2.innerHTML = declareP1;
+			}
+		}
+
+		const winner = (declaration) => {
+			h2.innerHTML = declaration;
+		}
+
+		return { player, winner };
+	})();
+
+	return { placedX, gamePlay, winningPlays, gameSpots, declare };
 })();
 
 // factory function for allowing player moves
@@ -40,7 +59,9 @@ const game = () => {
 	const p2 = player();
 	p2.playerMarker = "O";
 
-	const declareWinner = () => {
+	gameBoard.declare.player();
+
+	const determineWinner = () => {
 		let winningPlays = gameBoard.winningPlays;
 		let gamePlay = gameBoard.gamePlay;
 		let playArrLen = gamePlay.length;
@@ -94,14 +115,15 @@ const game = () => {
 					gameBoard.placedX = !gameBoard.placedX;
 				}
 
-				let winner = declareWinner();
+				gameBoard.declare.player();
+
+				let winner = determineWinner();
 
 				if (winner) {
-					alert(winner);
+					gameBoard.declare.winner(winner);
 					gameBoard.gameSpots.forEach((spot) => {
 						if (spot.innerHTML == "") {
 							spot.innerHTML = " ";
-							console.log("Reset spot");
 						}
 					});
 				}
