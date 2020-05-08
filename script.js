@@ -24,10 +24,12 @@ const gameBoard = (() => {
 	})();
 	const declare = (() => {
 		const h2 = document.querySelector("h2");
-		const declareP1 = "Player 1's Turn!";
-		const declareP2 = "Player 2's Turn!";
+		const declareTurn = "'s Turn!";
 
-		const player = () => {
+		const player = (name1, name2) => {
+			const declareP1 = name1 + declareTurn;
+			const declareP2 = name2 + declareTurn;
+
 			if (h2.innerHTML == declareP1) {
 				h2.innerHTML = declareP2;
 			} else {
@@ -47,19 +49,22 @@ const gameBoard = (() => {
 
 // factory function for allowing player moves
 const player = () => {
+	let name;
 	let playerMarker;
 
-	return { playerMarker }
+	return { name, playerMarker }
 }
 
 // factory function for a two player game
 const game = () => {
 	const p1 = player();
+	p1.name = prompt("Player 1, enter your name.", "Player 1");
 	p1.playerMarker = "X";
 	const p2 = player();
+	p2.name = prompt("Player 2, enter your name.", "Player 2");
 	p2.playerMarker = "O";
 
-	gameBoard.declare.player();
+	gameBoard.declare.player(p1.name, p2.name);
 
 	const determineWinner = () => {
 		let winningPlays = gameBoard.winningPlays;
@@ -93,9 +98,9 @@ const game = () => {
 				});
 
 				if (xWins >= 3) {
-					return "Player 1 has won!";
+					return `${p1.name} has won!`;
 				} else if (oWins >= 3) {
-					return "Player 2 has won!";
+					return `${p2.name} has won!`;
 				}
 			}
 		}
@@ -115,7 +120,7 @@ const game = () => {
 					gameBoard.placedX = !gameBoard.placedX;
 				}
 
-				gameBoard.declare.player();
+				gameBoard.declare.player(p1.name, p2.name);
 
 				let winner = determineWinner();
 
