@@ -98,6 +98,12 @@ const game = () => {
 
 				if (winner) {
 					alert(winner);
+					gameBoard.gameSpots.forEach((spot) => {
+						if (spot.innerHTML == "") {
+							spot.innerHTML = " ";
+							console.log("Reset spot");
+						}
+					});
 				}
 			}
 		});
