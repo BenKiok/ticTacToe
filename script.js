@@ -58,10 +58,16 @@ const player = () => {
 // factory function for a two player game
 const game = () => {
 	const p1 = player();
-	p1.name = prompt("Player 1, enter your name.", "Player 1");
+	p1.name = prompt("Player 1, enter your name.");
+	if (!p1.name || p1.name == "") {
+		p1.name = "Player 1";
+	}
 	p1.playerMarker = "X";
 	const p2 = player();
-	p2.name = prompt("Player 2, enter your name.", "Player 2");
+	p2.name = prompt("Player 2, enter your name.");
+	if (!p2.name || p2.name == "") {
+		p2.name = "Player 2";
+	}
 	p2.playerMarker = "O";
 
 	gameBoard.declare.player(p1.name, p2.name);
