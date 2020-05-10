@@ -1,7 +1,7 @@
 // module for setting x's and o's
-const gameBoard = (() => {
+const gameboard = (() => {
 	let placedX = false;
-	let gamePlay = [];
+	let gameplay = [];
 	const winningPlays = [
 		[0,1,2],
 		[3,4,5],
@@ -41,10 +41,53 @@ const gameBoard = (() => {
 			h2.innerHTML = declaration;
 		}
 
-		return { player, winner };
+		const userInput = () => {
+			h2.innerHTML = "Enter your names!"
+		}
+
+		return { player, winner, userInput };
+	})();
+	const board = (() => {
+		const input1 = document.querySelector("input");
+		const input2 = document.querySelectorAll("input")[1];
+		const gameboard = document.querySelector(".container");
+		const startPage = document.querySelector(".inputNames");
+
+		const switchToGame = () => {
+			let name1 = input1.value;
+			let name2 = input2.value;
+
+			input1.value = "";
+			input2.value = "";
+
+			startPage.classList.add("noDisplay");
+			gameboard.classList.remove("noDisplay");
+
+			if (!name1) {
+				name1 = "Player 1";
+			}
+
+			if (!name2) {
+				name2 = "Player 2";
+			}
+
+			declare.player(name1, name2);
+
+			return { name1, name2 };
+		}
+		// const reset = () => {
+		// 	placedX = false;
+		// 	gameplay = [];
+
+		// 	gameSpots.forEach((spot) => {
+		// 		spot.innerHTML = "";
+		// 	});
+		// }
+
+		return { switchToGame }
 	})();
 
-	return { placedX, gamePlay, winningPlays, gameSpots, declare };
+	return { placedX, gameplay, winningPlays, gameSpots, declare, board };
 })();
 
 // factory function for allowing player moves
@@ -58,31 +101,31 @@ const player = () => {
 // factory function for a two player game
 const game = () => {
 	const p1 = player();
-	p1.name = prompt("Player 1, enter your name.");
-	if (!p1.name || p1.name == "") {
-		p1.name = "Player 1";
-	}
 	p1.playerMarker = "X";
 	const p2 = player();
-	p2.name = prompt("Player 2, enter your name.");
-	if (!p2.name || p2.name == "") {
-		p2.name = "Player 2";
-	}
 	p2.playerMarker = "O";
 
-	gameBoard.declare.player(p1.name, p2.name);
+	gameboard.declare.userInput();
+
+	document.querySelector(".inputNames button").addEventListener("click", () => {
+			let namesObj = gameboard.board.switchToGame();
+			p1.name = namesObj.name1;
+			p2.name = namesObj.name2;
+	});
+
+	// document.querySelector(".container button").addEventListener("click", gameboard.board.reset);
 
 	const determineWinner = () => {
-		let winningPlays = gameBoard.winningPlays;
-		let gamePlay = gameBoard.gamePlay;
-		let playArrLen = gamePlay.length;
+		let winningPlays = gameboard.winningPlays;
+		let gameplay = gameboard.gameplay;
+		let playArrLen = gameplay.length;
 		let xPlays = [], oPlays = [];
 		let xWins, oWins;
 
 		for (i = 0; i < playArrLen; i++) {
-			if (gamePlay[i] == 'X') {
+			if (gameplay[i] == 'X') {
 				xPlays.push(i);
-			} else if (gamePlay[i] == 'O') {
+			} else if (gameplay[i] == 'O') {
 				oPlays.push(i);
 			}
 		}
@@ -113,26 +156,26 @@ const game = () => {
 
 	}
 
-	gameBoard.gameSpots.forEach((spot) => {
+	gameboard.gameSpots.forEach((spot) => {
 		spot.addEventListener("click", () => {
 			if (spot.innerHTML == "") {
-				if (!gameBoard.placedX) {
+				if (!gameboard.placedX) {
 					spot.innerHTML = "X";
-					gameBoard.gamePlay[gameBoard.gameSpots.indexOf(spot)] = "X";
-					gameBoard.placedX = !gameBoard.placedX;
+					gameboard.gameplay[gameboard.gameSpots.indexOf(spot)] = "X";
+					gameboard.placedX = !gameboard.placedX;
 				} else {
 					spot.innerHTML = "O";
-					gameBoard.gamePlay[gameBoard.gameSpots.indexOf(spot)] = "O";
-					gameBoard.placedX = !gameBoard.placedX;
+					gameboard.gameplay[gameboard.gameSpots.indexOf(spot)] = "O";
+					gameboard.placedX = !gameboard.placedX;
 				}
 
-				gameBoard.declare.player(p1.name, p2.name);
+				gameboard.declare.player(p1.name, p2.name);
 
 				let winner = determineWinner();
 
 				if (winner) {
-					gameBoard.declare.winner(winner);
-					gameBoard.gameSpots.forEach((spot) => {
+					gameboard.declare.winner(winner);
+					gameboard.gameSpots.forEach((spot) => {
 						if (spot.innerHTML == "") {
 							spot.innerHTML = " ";
 						}
